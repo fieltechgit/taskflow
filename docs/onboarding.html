@@ -1,0 +1,573 @@
+<!doctype html>
+<title>TaskFlow — Onboarding Notes</title>
+<meta name="description" content="What TaskFlow is, how it's built, and where to pick up the work.">
+<style>
+  :root {
+    --bg: #f6f5f1;
+    --surface: #ffffff;
+    --ink: #211f1c;
+    --ink-soft: #58554d;
+    --ink-faint: #8b8678;
+    --rule: #ddd8cb;
+    --accent: #b6672c;
+    --accent-soft: #f0dcc4;
+    --done: #4f7350;
+    --done-soft: #dbe6d4;
+    --danger: #a34438;
+    --danger-soft: #f0d9d3;
+    --code-bg: #211e1a;
+    --code-ink: #f1ede2;
+    --code-key: #d98a4c;
+    --code-str: #9db77f;
+    --shadow: 0 1px 2px rgba(33,31,28,0.06), 0 8px 24px -12px rgba(33,31,28,0.18);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #171512;
+      --surface: #1e1b17;
+      --ink: #efeae0;
+      --ink-soft: #b5ae9f;
+      --ink-faint: #7d7767;
+      --rule: #3a352c;
+      --accent: #dd934f;
+      --accent-soft: #3d2c1c;
+      --done: #86a880;
+      --done-soft: #253023;
+      --danger: #e08975;
+      --danger-soft: #3a2420;
+      --code-bg: #0f0e0c;
+      --code-ink: #ece7da;
+      --code-key: #e2a165;
+      --code-str: #a9c98a;
+      --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 8px 24px -12px rgba(0,0,0,0.5);
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #171512;
+    --surface: #1e1b17;
+    --ink: #efeae0;
+    --ink-soft: #b5ae9f;
+    --ink-faint: #7d7767;
+    --rule: #3a352c;
+    --accent: #dd934f;
+    --accent-soft: #3d2c1c;
+    --done: #86a880;
+    --done-soft: #253023;
+    --danger: #e08975;
+    --danger-soft: #3a2420;
+    --code-bg: #0f0e0c;
+    --code-ink: #ece7da;
+    --code-key: #e2a165;
+    --code-str: #a9c98a;
+    --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 8px 24px -12px rgba(0,0,0,0.5);
+  }
+  :root[data-theme="light"] {
+    --bg: #f6f5f1;
+    --surface: #ffffff;
+    --ink: #211f1c;
+    --ink-soft: #58554d;
+    --ink-faint: #8b8678;
+    --rule: #ddd8cb;
+    --accent: #b6672c;
+    --accent-soft: #f0dcc4;
+    --done: #4f7350;
+    --done-soft: #dbe6d4;
+    --danger: #a34438;
+    --danger-soft: #f0d9d3;
+    --code-bg: #211e1a;
+    --code-ink: #f1ede2;
+    --code-key: #d98a4c;
+    --code-str: #9db77f;
+    --shadow: 0 1px 2px rgba(33,31,28,0.06), 0 8px 24px -12px rgba(33,31,28,0.18);
+  }
+
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif;
+    font-size: 16px;
+    line-height: 1.6;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    * { animation-duration: 0.001ms !important; transition-duration: 0.001ms !important; }
+  }
+
+  .wrap {
+    max-width: 46rem;
+    margin: 0 auto;
+    padding: 4rem 1.5rem 6rem;
+  }
+
+  header.title-block {
+    margin-bottom: 3.5rem;
+  }
+  .eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 0.78rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin: 0 0 1rem;
+  }
+  .eyebrow::before {
+    content: "";
+    width: 0.5rem;
+    height: 0.5rem;
+    border-radius: 1px;
+    background: var(--accent);
+    transform: rotate(45deg);
+    flex: none;
+  }
+  h1 {
+    font-family: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, ui-serif, serif;
+    font-size: 2.6rem;
+    line-height: 1.1;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    margin: 0 0 0.75rem;
+    text-wrap: balance;
+  }
+  .subtitle {
+    font-size: 1.08rem;
+    color: var(--ink-soft);
+    max-width: 34rem;
+    margin: 0;
+    text-wrap: pretty;
+  }
+
+  h2 {
+    font-family: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, ui-serif, serif;
+    font-size: 1.5rem;
+    font-weight: 600;
+    letter-spacing: -0.005em;
+    margin: 0 0 1.1rem;
+    padding-left: 1rem;
+    border-left: 3px solid var(--accent);
+  }
+  h3 {
+    font-family: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, ui-serif, serif;
+    font-size: 1.12rem;
+    font-weight: 600;
+    margin: 1.75rem 0 0.6rem;
+  }
+  section { margin: 3.25rem 0; }
+  section > p { max-width: 42rem; }
+  p { color: var(--ink); margin: 0 0 1rem; }
+  p.lede { color: var(--ink-soft); }
+  a { color: var(--accent); }
+  code {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 0.88em;
+    background: var(--accent-soft);
+    color: var(--ink);
+    padding: 0.1em 0.4em;
+    border-radius: 3px;
+  }
+
+  /* Tech stack chips */
+  .stack {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .stack li {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+    background: var(--surface);
+    border: 1px solid var(--rule);
+    border-radius: 8px;
+    padding: 0.65rem 0.9rem;
+    box-shadow: var(--shadow);
+    min-width: 9.5rem;
+    flex: 1 1 9.5rem;
+  }
+  .stack .name {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 0.92rem;
+    font-weight: 600;
+    color: var(--ink);
+  }
+  .stack .role {
+    font-size: 0.82rem;
+    color: var(--ink-faint);
+  }
+
+  /* Commands table */
+  .table-scroll { overflow-x: auto; }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.95rem;
+    background: var(--surface);
+    border: 1px solid var(--rule);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  th, td {
+    text-align: left;
+    padding: 0.7rem 1rem;
+    border-bottom: 1px solid var(--rule);
+    vertical-align: top;
+  }
+  th {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 0.72rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    font-weight: 600;
+  }
+  tr:last-child td { border-bottom: none; }
+  td code { white-space: nowrap; }
+  .status-pill {
+    display: inline-block;
+    font-size: 0.72rem;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    padding: 0.15em 0.55em;
+    border-radius: 99px;
+    font-weight: 600;
+  }
+  .status-pill.todo { background: var(--accent-soft); color: var(--accent); }
+  .status-pill.done { background: var(--done-soft); color: var(--done); }
+
+  /* Diagram */
+  .diagram {
+    background: var(--surface);
+    border: 1px solid var(--rule);
+    border-radius: 10px;
+    padding: 2rem 1.5rem;
+    box-shadow: var(--shadow);
+  }
+  .diagram-scroll { overflow-x: auto; }
+  .flow {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(9.5rem, 1fr));
+    gap: 0;
+    align-items: stretch;
+    min-width: 42rem;
+  }
+  .node {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+    justify-content: center;
+    border: 1.5px solid var(--rule);
+    border-radius: 8px;
+    padding: 0.9rem 1rem;
+    background: var(--bg);
+    position: relative;
+    min-height: 4.6rem;
+  }
+  .node .label {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-weight: 600;
+    font-size: 0.88rem;
+    color: var(--ink);
+  }
+  .node .desc {
+    font-size: 0.76rem;
+    color: var(--ink-faint);
+    line-height: 1.35;
+  }
+  .node.accent {
+    border-color: var(--accent);
+    background: var(--accent-soft);
+  }
+  .node.accent .label { color: var(--accent); }
+  .node.store {
+    border-color: var(--done);
+    background: var(--done-soft);
+  }
+  .node.store .label { color: var(--done); }
+
+  .arrow-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 2.1rem;
+  }
+  .arrow-row svg { display: block; }
+  .arrow-row .caption {
+    position: absolute;
+  }
+  .flow-row {
+    display: contents;
+  }
+  .connector {
+    grid-column: span 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 0.35rem;
+  }
+
+  .fn-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    margin-top: 0.75rem;
+  }
+  .fn-list .node { min-height: auto; padding: 0.55rem 0.8rem; }
+
+  .test-branch {
+    margin-top: 1.75rem;
+    padding-top: 1.5rem;
+    border-top: 1px dashed var(--rule);
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+  .test-branch .node { flex: 1 1 12rem; min-height: auto; padding: 0.7rem 1rem; }
+  .test-branch .connector-label {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 0.74rem;
+    color: var(--ink-faint);
+    white-space: nowrap;
+  }
+
+  /* Code block */
+  pre {
+    background: var(--code-bg);
+    color: var(--code-ink);
+    border-radius: 8px;
+    padding: 1.1rem 1.3rem;
+    overflow-x: auto;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 0.86rem;
+    line-height: 1.55;
+    box-shadow: var(--shadow);
+  }
+  pre .k { color: var(--code-key); }
+  pre .s { color: var(--code-str); }
+  pre .c { color: #8a8474; }
+
+  ol.steps, ul.plain {
+    padding-left: 1.3rem;
+    margin: 0.5rem 0 1rem;
+  }
+  ol.steps li, ul.plain li { margin-bottom: 0.45rem; color: var(--ink); }
+
+  .callout {
+    border-left: 3px solid var(--danger);
+    background: var(--danger-soft);
+    border-radius: 0 8px 8px 0;
+    padding: 0.9rem 1.1rem;
+    font-size: 0.92rem;
+    color: var(--ink);
+  }
+  .callout strong { color: var(--danger); }
+
+  footer {
+    margin-top: 4rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--rule);
+    font-size: 0.82rem;
+    color: var(--ink-faint);
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+
+  @media (max-width: 640px) {
+    h1 { font-size: 2rem; }
+    .wrap { padding: 2.5rem 1.1rem 4rem; }
+    .flow { grid-template-columns: 1fr; min-width: 0; }
+    .connector { transform: rotate(90deg); padding: 0.35rem 0; }
+    .diagram-scroll { overflow-x: visible; }
+  }
+</style>
+
+<div class="wrap">
+
+  <header class="title-block">
+    <p class="eyebrow">Internal · Engineering Onboarding</p>
+    <h1>TaskFlow</h1>
+    <p class="subtitle">A command-line task manager backed by SQLite — the foundation you're inheriting, not the finished app. This page is your map before you open <code>FEATURES.md</code> and start building.</p>
+  </header>
+
+  <section id="what">
+    <h2>What it does</h2>
+    <p>TaskFlow is a terminal program you run with <code>python app.py</code>. It keeps a to-do list in a local SQLite database file (<code>taskflow.db</code>) and gives you four commands to work with it: add a task, list them, mark one done, delete one. Nothing more — no accounts, no priorities, no due dates yet. Those are what you're going to add.</p>
+
+    <div class="table-scroll">
+      <table>
+        <thead>
+          <tr><th>Command</th><th>What happens</th><th>Result</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>add</code></td>
+            <td>Prompts for a title, inserts a row with status <code>todo</code></td>
+            <td><span class="status-pill todo">todo</span></td>
+          </tr>
+          <tr>
+            <td><code>list</code></td>
+            <td>Prints every task, newest first, with a <code>[x]</code> / <code>[ ]</code> marker</td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <td><code>done</code></td>
+            <td>Prompts for an id, sets that row's status</td>
+            <td><span class="status-pill done">done</span></td>
+          </tr>
+          <tr>
+            <td><code>delete</code></td>
+            <td>Prompts for an id, removes that row permanently</td>
+            <td>—</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section id="how">
+    <h2>How it does it</h2>
+    <p class="lede">One file, six small functions, one table. <code>app.py</code> runs a loop that reads a command, then calls a function that opens a connection, runs one SQL statement, and closes it again. No ORM, no connection pooling — every call is a fresh <code>sqlite3.connect()</code>.</p>
+
+    <div class="diagram">
+      <div class="diagram-scroll">
+        <div class="flow" role="img" aria-label="Flow diagram: Terminal user sends a command to the main loop, which dispatches to a task function, which opens a SQLite connection and writes to taskflow.db">
+
+          <div class="node">
+            <span class="label">You (terminal)</span>
+            <span class="desc">types add / list / done / delete</span>
+          </div>
+
+          <div class="connector">
+            <svg width="40" height="16" viewBox="0 0 40 16" aria-hidden="true">
+              <line x1="0" y1="8" x2="32" y2="8" stroke="var(--ink-faint)" stroke-width="1.5"/>
+              <polygon points="32,3 40,8 32,13" fill="var(--ink-faint)"/>
+            </svg>
+          </div>
+
+          <div class="node accent">
+            <span class="label">main()</span>
+            <span class="desc">the input loop — reads a command, dispatches it</span>
+          </div>
+
+          <div class="connector">
+            <svg width="40" height="16" viewBox="0 0 40 16" aria-hidden="true">
+              <line x1="0" y1="8" x2="32" y2="8" stroke="var(--ink-faint)" stroke-width="1.5"/>
+              <polygon points="32,3 40,8 32,13" fill="var(--ink-faint)"/>
+            </svg>
+          </div>
+
+          <div style="grid-column: span 1; display: flex; flex-direction: column; justify-content: center;">
+            <div class="fn-list">
+              <div class="node"><span class="label">add_task()</span></div>
+              <div class="node"><span class="label">list_tasks()</span></div>
+              <div class="node"><span class="label">complete_task()</span></div>
+              <div class="node"><span class="label">delete_task()</span></div>
+            </div>
+          </div>
+
+        </div>
+
+        <div style="display:flex; align-items:center; justify-content:center; margin: 0.9rem 0;">
+          <svg width="16" height="34" viewBox="0 0 16 34" aria-hidden="true">
+            <line x1="8" y1="0" x2="8" y2="26" stroke="var(--ink-faint)" stroke-width="1.5"/>
+            <polygon points="3,26 8,34 13,26" fill="var(--ink-faint)"/>
+          </svg>
+        </div>
+
+        <div style="display:flex; justify-content:center;">
+          <div class="node store" style="max-width: 22rem; width: 100%;">
+            <span class="label">get_connection() → taskflow.db</span>
+            <span class="desc">every function opens its own connection, runs one query, commits, closes</span>
+          </div>
+        </div>
+
+        <div class="test-branch">
+          <span class="connector-label">tested directly by →</span>
+          <div class="node" style="border-style: dashed;">
+            <span class="label">test_app.py</span>
+            <span class="desc">pytest calls add_task / complete_task / delete_task straight — no CLI, no mocking</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <h3>Why it's built this way</h3>
+    <ul class="plain">
+      <li>Functions are the seam. The CLI loop (<code>main</code>) never touches SQL directly — every read or write goes through a named function, which is also what makes the functions testable without simulating terminal input.</li>
+      <li><code>conn.row_factory = sqlite3.Row</code> is the one line worth noticing in <code>get_connection()</code> — it's what lets code read <code>task["title"]</code> instead of <code>task[1]</code>.</li>
+      <li><code>init_db()</code> runs <code>CREATE TABLE IF NOT EXISTS</code> on every startup, so the schema is self-healing — there's no separate migration step yet.</li>
+    </ul>
+
+    <div class="callout">
+      <strong>Note the gap:</strong> there's no user table and no auth — anyone running the program has full access. That's intentional; it's the "Hard" tier in <code>FEATURES.md</code>, using <code>bcrypt</code> (already in <code>requirements.txt</code>).
+    </div>
+  </section>
+
+  <section id="stack">
+    <h2>Technologies used</h2>
+    <ul class="stack">
+      <li>
+        <span class="name">Python 3</span>
+        <span class="role">language — standard library only for the app itself</span>
+      </li>
+      <li>
+        <span class="name">sqlite3</span>
+        <span class="role">built-in module — talks to the on-disk database</span>
+      </li>
+      <li>
+        <span class="name">SQLite</span>
+        <span class="role">storage — a single file, <code>taskflow.db</code>, no server to run</span>
+      </li>
+      <li>
+        <span class="name">pytest</span>
+        <span class="role">test runner — see <code>test_app.py</code></span>
+      </li>
+      <li>
+        <span class="name">pytest-cov</span>
+        <span class="role">coverage reporting — <code>pytest --cov</code></span>
+      </li>
+      <li>
+        <span class="name">bcrypt</span>
+        <span class="role">installed, unused so far — reserved for the auth feature</span>
+      </li>
+    </ul>
+  </section>
+
+  <section id="run">
+    <h2>Running it</h2>
+    <ol class="steps">
+      <li>Create a virtual environment and install dependencies:
+        <pre><span class="c"># from the repo root</span>
+python3 -m venv .venv
+.venv/bin/pip install -r requirements.txt</pre>
+      </li>
+      <li>Run the app:
+        <pre>.venv/bin/python app.py</pre>
+      </li>
+      <li>Run the tests:
+        <pre>.venv/bin/pytest -v</pre>
+      </li>
+    </ol>
+    <p>The test suite currently has 5 tests, all passing — they cover adding, defaulting to <code>todo</code>, completing, completing an unknown id, and deleting.</p>
+  </section>
+
+  <section id="next">
+    <h2>Where you come in</h2>
+    <p>This foundation is deliberately thin. <code>FEATURES.md</code> lists the roadmap in three tiers — Easy (priority field, edit, filter by status), Medium (due dates, tags, CSV export), Hard (bcrypt auth, full test coverage, optional Flask web UI). Work one feature at a time: build it in <code>app.py</code>, add a test for it in <code>test_app.py</code>, add a line to the README explaining it. That loop is the actual point of the exercise.</p>
+  </section>
+
+  <footer>
+    <span>TaskFlow — internal onboarding notes</span>
+    <span>See <code>README.md</code> and <code>FEATURES.md</code> in the repo root for the rest</span>
+  </footer>
+
+</div>
