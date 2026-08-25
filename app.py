@@ -28,6 +28,7 @@ def init_db():
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             title TEXT NOT NULL,
             status TEXT NOT NULL DEFAULT 'todo',
+            priority TEXT NOT NULL DEFAULT 'medium',
             created_at TEXT NOT NULL
         )
         """
@@ -36,12 +37,18 @@ def init_db():
     conn.close()
 
 
-def add_task(title):
-    """Add a new task with the given title. Status starts as 'todo'."""
+PRIORITIES = ("low", "medium", "high")
+
+
+def add_task(title, priority="medium"):
+    """Add a new task with the given title. Status starts as 'todo'.
+    Priority must be one of 'low', 'medium', 'high' — defaults to 'medium'."""
+    if priority not in PRIORITIES:
+        priority = "medium"
     conn = get_connection()
     conn.execute(
-        "INSERT INTO tasks (title, status, created_at) VALUES (?, ?, ?)",
-        (title, "todo", datetime.now().isoformat()),
+        "INSERT INTO tasks (title, status, priority, created_at) VALUES (?, ?, ?, ?)",
+        (title, "todo", priority, datetime.now().isoformat()),
     )
     conn.commit()
     conn.close()
@@ -85,7 +92,7 @@ def print_tasks():
         return
     for task in tasks:
         marker = "[x]" if task["status"] == "done" else "[ ]"
-        print(f"{marker} #{task['id']}  {task['title']}")
+        print(f"{marker} #{task['id']}  ({task['priority']})  {task['title']}")
 
 
 def main():
@@ -101,7 +108,11 @@ def main():
         if command == "add":
             title = input("Task title: ").strip()
             if title:
-                add_task(title)
+                priority = input("Priority (low/medium/high) [medium]: ").strip().lower()
+                if priority:
+                    add_task(title, priority)
+                else:
+                    add_task(title)
                 print("Added.")
             else:
                 print("Title can't be empty.")

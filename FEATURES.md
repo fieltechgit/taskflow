@@ -14,7 +14,7 @@ training, not just the Python.
 
 ## Easy
 
-- [ ] **Priority field** — add a `priority` column (`low` / `medium` / `high`).
+- [x] **Priority field** — add a `priority` column (`low` / `medium` / `high`).
   New tasks default to `medium`. Let `list` show priority next to each task.
 - [ ] **Edit a task's title** — a new `edit` command that lets you change an
   existing task's title by id.

@@ -60,6 +60,21 @@ def test_delete_task_removes_it():
     assert len(taskflow.list_tasks()) == 0
 
 
+def test_new_task_defaults_to_medium_priority():
+    taskflow.add_task("Unspecified priority")
+    assert taskflow.list_tasks()[0]["priority"] == "medium"
+
+
+def test_add_task_with_explicit_priority():
+    taskflow.add_task("Urgent fix", priority="high")
+    assert taskflow.list_tasks()[0]["priority"] == "high"
+
+
+def test_invalid_priority_falls_back_to_medium():
+    taskflow.add_task("Typo'd priority", priority="urgent")
+    assert taskflow.list_tasks()[0]["priority"] == "medium"
+
+
 # ---------------------------------------------------------------------
 # Your turn: as you add features (priority, due dates, tags...), add
 # tests here that follow this same pattern. A good test:
