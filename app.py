@@ -28,6 +28,7 @@ def init_db():
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             title TEXT NOT NULL,
             status TEXT NOT NULL DEFAULT 'todo',
+            priority TEXT NOT NULL DEFAULT 'medium',
             created_at TEXT NOT NULL
         )
         """
@@ -36,12 +37,12 @@ def init_db():
     conn.close()
 
 
-def add_task(title):
+def add_task(title, priority):
     """Add a new task with the given title. Status starts as 'todo'."""
     conn = get_connection()
     conn.execute(
-        "INSERT INTO tasks (title, status, created_at) VALUES (?, ?, ?)",
-        (title, "todo", datetime.now().isoformat()),
+        "INSERT INTO tasks (title, priority, status, created_at) VALUES (?, ?, ?, ?)",
+        (title, priority, "todo", datetime.now().isoformat()),
     )
     conn.commit()
     conn.close()
@@ -54,6 +55,16 @@ def list_tasks():
     conn.close()
     return rows
 
+
+def edit_task(new_title, id):
+    conn = get_connection()
+    cursor = conn.execute(
+        "UPDATE tasks SET title = ? WHERE id = ?", (new_title, id)
+    )
+    conn.commit()
+    editted = cursor.rowcount > 0
+    conn.close()
+    return editted
 
 def complete_task(task_id):
     """Mark a task as done, by id. Returns True if a task was updated."""
@@ -78,36 +89,68 @@ def delete_task(task_id):
 
 
 def print_tasks():
-    """Print all tasks in a readable format."""
+    ''' Print all tasks in a readable format. '''
     tasks = list_tasks()
     if not tasks:
         print("No tasks yet. Add one!")
         return
     for task in tasks:
         marker = "[x]" if task["status"] == "done" else "[ ]"
-        print(f"{marker} #{task['id']}  {task['title']}")
+        print(f"{marker} #{task['id']}  {task['title']} [{task['priority']}]")
 
+''' def print_tasks(sort):
+    """Print all tasks in a readable format."""
+    tasks = list_tasks()
+    if not tasks:
+        print("No tasks added yet!")
+        return
+    for task in tasks:
+        marker = "[x]" if task["status"] == "done" else "[ ]"
+        if task["status"] == sort:
+            print(f"{marker} #{task['id']}  {task['title']} [{task['priority']}]")
+    for task in tasks:
+        if task["status"] != sort:
+            print(f"{marker} #{task['id']}  {task['title']} [{task['priority']}]")'''
 
 def main():
     """Simple menu-driven loop. This is intentionally basic — improve it
     as you go."""
     init_db()
     print("=== TaskFlow CLI ===")
-    print("Commands: add, list, done, delete, quit")
+    print("Commands: add, list, edit, done, delete, quit")
 
     while True:
         command = input("\n> ").strip().lower()
 
         if command == "add":
             title = input("Task title: ").strip()
+            priority = input("Priority: (low/medium/high) [medium]: ").strip()
+            valid_priorities = ["low", "medium", "high"]
+            if priority not in valid_priorities:
+                priority = "medium"
             if title:
-                add_task(title)
+                add_task(title, priority)
                 print("Added.")
             else:
                 print("Title can't be empty.")
 
+        ''' elif command.lower().endswith("todo"):
+            print_tasks("todo") '''
+
         elif command == "list":
             print_tasks()
+
+
+        elif command == "edit":
+            new_id = input("task id to edit: ").strip()
+            if new_id.isdigit():
+                new_title = input("enter title: ").strip()
+                if edit_task(new_title, new_id):
+                    print("Editted task.")
+                else:
+                    print("id not found.")
+            else:
+                print("unrecognized id data type.")
 
         elif command == "done":
             task_id = input("Task id to mark done: ").strip()
