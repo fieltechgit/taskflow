@@ -7,15 +7,15 @@ A small command-line task manager, backed by SQLite. This is a **foundation**
 
 ```bash
 pip install -r requirements.txt
-python app.py
+python3 app.py
 ```
 
 ## Commands (as of the foundation)
 
 | Command | What it does |
 |---|---|
-| `add` | Add a new task |
-| `list` | Show all tasks |
+| `add` | Add a new task, with an optional priority (`low`/`medium`/`high`, defaults to `medium`) |
+| `list` | Show all tasks, with their priority |
 | `done` | Mark a task as complete, by id |
 | `delete` | Delete a task, by id |
 | `quit` | Exit |
