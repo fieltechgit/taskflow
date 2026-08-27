@@ -7,7 +7,7 @@ A small command-line task manager, backed by SQLite. This is a **foundation**
 
 ```bash
 pip install -r requirements.txt
-python app.py
+python3 app.py
 ```
 
 ## Commands (as of the foundation)
