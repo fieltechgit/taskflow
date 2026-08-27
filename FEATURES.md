@@ -14,33 +14,33 @@ training, not just the Python.
 
 ## Easy
 
-- [x] **Priority field** — add a `priority` column (`low` / `medium` / `high`).
+- [ ] **Priority field** — add a `priority` column (`low` / `medium` / `high`).
   New tasks default to `medium`. Let `list` show priority next to each task.
-- [x] **Edit a task's title** — a new `edit` command that lets you change an
+- [ ] **Edit a task's title** — a new `edit` command that lets you change an
   existing task's title by id.
-- [x] **Filter by status** — `list todo` shows only incomplete tasks,
+- [ ] **Filter by status** — `list todo` shows only incomplete tasks,
   `list done` shows only completed ones, `list` alone shows everything.
 
 ## Medium
 
-- [x] **Due dates** — add a `due_date` column. When adding a task, optionally
+- [ ] **Due dates** — add a `due_date` column. When adding a task, optionally
   ask for a due date (skip if left blank). Sort `list` by due date, soonest
   first, with tasks that have no due date at the end.
-- [x] **Tags** — allow a task to have one or more tags (e.g. `work`, `personal`).
+- [ ] **Tags** — allow a task to have one or more tags (e.g. `work`, `personal`).
   This needs a second table and a join — this is where "a bit of database"
   becomes "actually using a relational database." Add a `list <tag>` filter.
-- [x] **Export to CSV** — a new `export` command that writes all tasks to a
+- [ ] **Export to CSV** — a new `export` command that writes all tasks to a
   `tasks.csv` file, one row per task.
 
 ## Hard
 
-- [x] **Basic auth** — before any commands work, require a username + password
+- [ ] **Basic auth** — before any commands work, require a username + password
   (hashed with `bcrypt`, not stored in plaintext — same rule as the real
   assessment). Store users in a new `users` table.
-- [x] **Full pytest coverage** — by this point you should have tests for every
+- [ ] **Full pytest coverage** — by this point you should have tests for every
   feature above. Run `pytest --cov` and get meaningful coverage, not just
   passing tests.
-- [x] **Stretch: turn it into a tiny web app** — using Flask, expose the same
+- [ ] **Stretch: turn it into a tiny web app** — using Flask, expose the same
   functionality (`add`, `list`, `done`, `delete`) as a small web UI instead
   of a CLI. This is optional and a genuine jump in complexity — only attempt
   it once everything above is solid.
